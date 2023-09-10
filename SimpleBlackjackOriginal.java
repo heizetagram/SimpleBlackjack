@@ -1,7 +1,7 @@
 /*
 Jeg prøvede at få user og Dealer til at skiftes med at trække et kort, men kunne ikke få det til at fungere.
 Så jeg endte med at give Dealer lov til at trække efter user.
- */
+*/
 
 import java.util.Random;
 import java.util.Scanner;
@@ -11,132 +11,35 @@ public class SimpleBlackjackOriginal {
         new SimpleBlackjackOriginal().run();
     }
 
+    //----------RUN METHOD----------\\
     private void run() {
         Scanner scan = new Scanner(System.in);
         int userFirstCard = pictureCard(randomCard());
         int dealerFirstCard = pictureCard(randomCard());
-
-        mandatoryCards(userFirstCard, dealerFirstCard);
-
+        introductoryText(userFirstCard, dealerFirstCard); //Invokes 'introductoryText' that prints...
 
         String answer = "";
-        int finalUserHand = userFirstCard;
-        while (!answer.equals("stand") && finalUserHand < 21) {
+        int userFinalHandValue = userFirstCard;
+        while (!answer.equals("stand") && userFinalHandValue < 21) { //While user's String input isn't 'stand and while user's hand is below 21, keep running the code
             System.out.println("Do you want to HIT or STAND?");
-            answer = scan.next().toLowerCase().strip();
-            finalUserHand = userHit(finalUserHand, answer, scan);
+            answer = scan.next().toLowerCase().strip(); //Prompts user for String input and assigns 'answer' that value
+            userFinalHandValue = userHit(userFinalHandValue, answer, scan); //Invokes method userHit, that runs if 'answer' equals 'hit'. If yes, then assign 'userFinalHandValue' that value
 
-            userStand(answer); //Method is invoked and checks if answer equals 'stand'
+            userStand(answer); //Method is invoked and checks if 'answer' equals 'stand'
 
-            userBust(finalUserHand); //Method is invoked and checks if user's hand is > 21
+            userBust(userFinalHandValue); //Method is invoked and checks if user's hand is > 21
         }
 
-        int finalDealerHand = dealerFirstCard;
-        while (finalDealerHand < 17) {
-            finalDealerHand = dealerHit(finalDealerHand);
+        int finalDealerHandValue = dealerFirstCard;
+        while (finalDealerHandValue < 17) { //While Dealer's hand is below 17, keep running the code below
+            finalDealerHandValue = dealerHit(finalDealerHandValue); //Invokes 'dealerHit' and assigns 'finalDealerHandValue' that value
 
-            dealerStand(finalDealerHand);
+            dealerStand(finalDealerHandValue); //Invokes 'dealerStand' that checks if Dealer's hand is between 17-21
 
-            dealerBust(finalDealerHand);
+            dealerBust(finalDealerHandValue); //Invokes 'dealerBust' that checks if Dealer's hand is above 21
         }
-
-        gameWinner(finalUserHand, finalDealerHand);
+        gameWinner(userFinalHandValue, finalDealerHandValue); //Invokes 'gameWinner' that checks who has the higher card, if either haven't busted
     }
-
-    private void mandatoryCards(int userFirstCard, int dealerFirstCard) {
-        System.out.printf("Your first card is %d%n", userFirstCard);
-        System.out.printf("Dealer's first card is %d%n", dealerFirstCard);
-    }
-
-
-    //----------USER HIT----------\\
-    private int userHit(int userFirstCard, String answer, Scanner scan) {
-        int userFinalHand = userFirstCard;
-
-        if (answer.equals("hit")) {
-            int userHit = pictureCard(randomCard());
-            userFinalHand += userHit;
-            System.out.println("You hit " + userHit); //COMBINE TO ONE LINE AFTER
-            System.out.println("Your hand value is now " + userFinalHand);
-        }
-        return userFinalHand;
-    }
-
-    //----------USER STAND----------\\
-    private void userStand(String answer) {
-        if (answer.equals("stand"))
-            System.out.println("You STAND");
-    }
-
-    //----------USER BUST----------\\
-    private void userBust(int userHand) {
-        if (userHand > 21) {
-            System.out.println("\nYou BUST!\nDealer wins!");
-            System.exit(0);
-        }
-    }
-
-    //----------DEALER HIT----------\\
-    private int dealerHit(int dealerFirstCard) {
-        int dealerFinalHitHand = dealerFirstCard;
-        int dealerHit = pictureCard(randomCard());
-        dealerFinalHitHand += dealerHit;
-
-        System.out.println("\nDealer hits " + dealerHit); //COMBINE TO ONE LINE AFTER
-        System.out.print("Dealer's hand value is now " + dealerFinalHitHand);
-
-        return dealerFinalHitHand;
-    }
-
-    //----------DEALER STAND----------\\
-    private void dealerStand(int dealerHand) {
-        if (dealerHand > 17 && dealerHand <= 21) {
-            System.out.println(", and Dealer STANDS");
-        }
-    }
-
-    //----------DEALER BUST----------\\
-    private void dealerBust(int dealerHand) {
-        if (dealerHand > 21) {
-            System.out.println("\n\nDealer has BUSTED\nYou win!");
-            System.exit(0);
-        }
-    }
-
-    //----------DETERMINES GAME WINNER----------\\
-    private void gameWinner(int userHand, int dealerHand) {
-        if (userHand > dealerHand){
-            System.out.println("\nYou WIN!");
-        } else if (userHand < dealerHand) {
-            System.out.println("\nYou LOSE!");
-        } else {
-            System.out.println("\nPUSH!");
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //----------RANDOM CARD GENERATOR----------\\
     //Gets a random integer from 1-13
@@ -144,7 +47,6 @@ public class SimpleBlackjackOriginal {
         Random random = new Random(); //Creates random
         return random.nextInt(13) + 1; //Adds +1 to a random integer between 0-12, and returns it.
     }
-
 
     //----------PICTURE CARD TO 10 CONVERTER----------\\
     //Converts picture card to 10, and returns the value of the random number if it's below 10
@@ -158,4 +60,75 @@ public class SimpleBlackjackOriginal {
         return pictureToTen;
     }
 
+    //----------INTRODUCTORY TEXT----------\\
+    private void introductoryText(int userFirstCard, int dealerFirstCard) {
+        System.out.printf("Your first card is %d%n", userFirstCard);
+        System.out.printf("Dealer's first card is %d%n", dealerFirstCard);
+    }
+
+    //----------USER HIT----------\\
+    private int userHit(int userFirstCard, String answer, Scanner scan) {
+        int newUserHandValue = userFirstCard;
+
+        //If user inputs 'hit', get another card and add the value to the user's current hand
+        if (answer.equals("hit")) {
+            int userHitResult = pictureCard(randomCard()); //Creates int var with invoked method 'pictureCard' (random card between 1-13)
+            newUserHandValue += userHitResult; //Adds 'userHitResult' to 'newUserHandValue'
+
+            System.out.printf("You hit %d%nYour hand value is now %d%n", userHitResult, newUserHandValue);
+        }
+        return newUserHandValue; //Returns user's updated hand value as an int
+    }
+
+    //----------USER STAND----------\\
+    private void userStand(String answer) {
+        if (answer.equals("stand"))
+            System.out.println("You STAND");
+    }
+
+    //----------USER BUST----------\\
+    private void userBust(int userHand) {
+        if (userHand > 21) {
+            System.out.println("\nYou BUST!\nDealer wins!");
+            System.exit(0); //Ends code, if user's hand busts
+        }
+    }
+
+    //----------DEALER HIT----------\\
+    private int dealerHit(int dealerFirstCard) {
+        int newDealerHandValue = dealerFirstCard;
+        int dealerHitResult = pictureCard(randomCard()); //Creates int var with invoked method 'pictureCard' (random card between 1-13)
+        newDealerHandValue += dealerHitResult; //Adds 'dealerHitResult' to 'newUserHandValue'
+
+        System.out.printf("%nDealer hits %d%nDealer's hand value is now %d", dealerHitResult, newDealerHandValue);
+
+        return newDealerHandValue; //Returns dealer's updated hand as an int
+    }
+
+    //----------DEALER STAND----------\\
+    private void dealerStand(int dealerHand) {
+        if (dealerHand >= 17 && dealerHand <= 21) { //If Dealer's hand is between 17-21, then Dealer stands
+            System.out.println(", and Dealer STANDS");
+        }
+    }
+
+    //----------DEALER BUST----------\\
+    private void dealerBust(int dealerHand) {
+        if (dealerHand > 21) {
+            System.out.println("\n\nDealer has BUSTED\nYou win!");
+            System.exit(0); //Ends code, if Dealer's hand busts
+        }
+    }
+
+    //----------DETERMINES GAME WINNER----------\\
+    private void gameWinner(int userHand, int dealerHand) {
+        if (userHand > dealerHand) { //If 'userHand' is greater than 'dealerHand', then print following...
+            System.out.println("\nYou WIN!");
+        } else if (userHand < dealerHand) { //Else if 'userHand' is lower than 'dealerHand', then print following...
+            System.out.println("\nYou LOSE!");
+        } else { //Else 'userHand' and 'dealerHand' are equal, so print following...
+            System.out.println("\nPUSH!");
+        }
+    }
 }
+

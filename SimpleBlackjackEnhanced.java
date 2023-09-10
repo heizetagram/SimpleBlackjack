@@ -39,7 +39,6 @@ public class SimpleBlackjackEnhanced {
         System.out.println(whoHasHigherCard(userFinalHandValue, dealerFinalHandValue)); //Prints method 'whoHasHigherCard' that takes two arguments
     }
 
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //----------CHANGES TEXT COLOR----------\\
@@ -107,7 +106,7 @@ public class SimpleBlackjackEnhanced {
 
         //While user String input isn't 'stand', keep running the code
         do {
-            //If user inputs 'hit', get another card and add the value to the user's current hand.
+            //If user inputs 'hit', get another card and add the value to the user's current hand
             if (answer.equals("hit")) {
                 int hitResult = pictureCard(randomCard()); //Creates int var with invoked method 'pictureCard' (random card between 1-13)
                 newUserHandValue += hitResult; //Adds 'hitResult' to 'newUserHandValue'

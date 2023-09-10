@@ -20,20 +20,23 @@ public class SimpleBlackjackEnhanced {
         int dealerMandatoryHit1 = pictureCard(randomCard()); //Creates first int that saves value of the invoked method 'pictureCard' (Dealer's first card)
         int dealerMandatoryHit2 = pictureCard(randomCard());//Creates second int var that saves value of the invoked method 'pictureCard' (Dealer's second card)
         int dealerMandatoryHitsCalculated = dealerMandatoryHit1 + dealerMandatoryHit2; //Creates int that combines the two var above
+        int dealerFinalHandValue; //Creates int var with the Dealer's final hand value
 
-
-        //If the 'userMandatoryHitsCalculated' equals 11, then invoke 'doesUserHaveBlackjack' and check if the user's cards are 1 and 10, and updates the value of user's final hand to 21
+        //If 'userMandatoryHitsCalculated' equals 11, then invoke 'doesUserHaveBlackjack' that checks if the user's cards are 1 and 10. Updates the value of user's final hand to 21 if true.
         if (userMandatoryHitsCalculated == 11) {
-            userFinalHandValue = doesUserHaveBlackjack(userMandatoryHit1, userMandatoryHit2, userMandatoryHitsCalculated);
-        } else { //If the 'userMandatoryHitsCalculated' isn't 21, then start the usual game
+            userFinalHandValue = doesUserHaveBlackjack(userMandatoryHit1, userMandatoryHit2);
+        } else { //If the user doesn't have blackjack, start the usual game
             introductoryText(dealerMandatoryHit1, userMandatoryHit1, userMandatoryHit2, userMandatoryHitsCalculated); //Invokes 'introductoryText' that prints...
             String answer = scan.next().toLowerCase().strip(); //Creates String var that prompts user for String input, lowercases it, and strips whitespaces
             userFinalHandValue = userHitOrStand(answer, userMandatoryHitsCalculated); //Assigns the value of 'userFinalHandValue' with the Invoked method 'userHitOrStand' that takes two arguments
         }
 
-        //Creates int var with Dealer's final hand value, if their cards haven't busted
-        int dealerFinalHandValue = dealerHitOrStand(dealerMandatoryHit1, dealerMandatoryHit2, dealerMandatoryHitsCalculated); //Invokes 'dealerHitOrStand' method that takes three arguments
-
+        //If 'dealerMandatoryHitsCalculated' equals 11, then invoke 'doesDealerHaveBlackjack that checks if the Dealer's cards are 1 and 10. Updates the value of the Dealer's final hand to 21 if true.
+        if (dealerMandatoryHitsCalculated == 11) {
+            dealerFinalHandValue = doesDealerHaveBlackjack(dealerMandatoryHit1, dealerMandatoryHit2);
+        } else { //Else if the Dealer doesn't have blackjack, start the usual game
+            dealerFinalHandValue = dealerHitOrStand(dealerMandatoryHit1, dealerMandatoryHit2, dealerMandatoryHitsCalculated); //Invokes 'dealerHitOrStand' method that takes three arguments and assigns 'dealerFinalHandValue' its value.
+        }
 
         //Calculates who has the higher card
         System.out.println(whoHasHigherCard(userFinalHandValue, dealerFinalHandValue)); //Prints method 'whoHasHigherCard' that takes two arguments
@@ -85,6 +88,21 @@ public class SimpleBlackjackEnhanced {
             return picture; //If the input value is less than 10 or less, return the original card value without any change
         }
         return pictureToTen;
+    }
+
+
+    //----------BLACKJACK CONVERTER, 1 + 10 = 21----------\\
+    //If the mandatory hit cards include 1 and 10, assign the value 21 to 'blackjack', and return it
+    private int blackjackConverter(int mandatoryCard1, int mandatoryCard2) {
+        int blackjack = 0; //Creates an int var
+
+        if (mandatoryCard1 == 10 && mandatoryCard2 == 1) {
+            blackjack = 21;
+        }
+        if (mandatoryCard1 == 1 && mandatoryCard2 == 10) {
+            blackjack = 21;
+        }
+        return blackjack;
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,26 +156,11 @@ public class SimpleBlackjackEnhanced {
 
     //----------IS USER'S STARTING HAND BLACKJACK?----------\\
     //Checks if the the user's starting hand equals 21. If yes, then force the user to stand.
-    private int doesUserHaveBlackjack(int userMandatoryHit1, int userMandatoryHit2, int userMandatoryHitsCalculated){
-        int blackjack = userMandatoryHitsCalculated;
+    private int doesUserHaveBlackjack(int userMandatoryHit1, int userMandatoryHit2){
+        int blackjack = 0;
         if (blackjackConverter(userMandatoryHit1, userMandatoryHit2) == 21) {
             System.out.printf("%n%nYou have the cards %s%d%s and %s%d%s equaling %sBLACKJACK!%s%n", greenColor(), userMandatoryHit1, resetColor(), greenColor(), userMandatoryHit2, resetColor(), greenColor(), resetColor());
             userHitOrStand("stand", 21);
-            blackjack = 21;
-        }
-        return blackjack;
-    }
-
-
-    //----------BLACKJACK CONVERTER, 1 + 10 = 21----------\\
-    //If the mandatory hit cards include 1 and 10, assign the value 21 to 'blackjack', and return it
-    private int blackjackConverter(int mandatoryCard1, int mandatoryCard2) {
-        int blackjack = 0; //Creates an int var
-
-        if (mandatoryCard1 == 10 && mandatoryCard2 == 1) {
-            blackjack = 21;
-        }
-        if (mandatoryCard1 == 1 && mandatoryCard2 == 10) {
             blackjack = 21;
         }
         return blackjack;
@@ -195,6 +198,19 @@ public class SimpleBlackjackEnhanced {
             dealerBustedHand(newDealerHandResult); //Invokes method 'dealerBustedHand' that checks if the Dealer's new hand value has surpassed 21
         }
         return newDealerHandResult; //Returns as an int
+    }
+
+
+    //----------IS DEALER'S STARTING HAND BLACKJACK?----------\\
+    //Checks if the the Dealer's starting hand equals 21.
+    private int doesDealerHaveBlackjack(int dealerMandatoryHit1, int dealerMandatoryHit2){
+        int blackjack = 0;
+        if (blackjackConverter(dealerMandatoryHit1, dealerMandatoryHit2) == 21) {
+            System.out.printf("Dealer has the cards %s%d%s and %s%d%s equaling %sBLACKJACK%s%n", blueColor(), dealerMandatoryHit1, resetColor(), blueColor(), dealerMandatoryHit2, resetColor(), blueColor(), resetColor());
+            blackjack = 21;
+            System.out.printf("Dealer's hand value is %s%d%s%n", blueColor(), blackjack, resetColor());
+        }
+        return blackjack;
     }
 
 

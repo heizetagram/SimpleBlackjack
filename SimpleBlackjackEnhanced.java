@@ -2,6 +2,29 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class SimpleBlackjackEnhanced {
+    private int userMandatoryHit1;
+    private int userMandatoryHit2;
+    private int userMandatoryHitsCalculated;
+    private int userFinalHandValue;  //Var with the user's final hand value
+
+    private int dealerMandatoryHit1;
+    private int dealerMandatoryHit2;
+    private int dealerMandatoryHitsCalculated;
+    private int dealerFinalHandValue;  //Var with the Dealer's final hand value
+
+    public void initVariables() {
+    userMandatoryHit1 = 0;
+    userMandatoryHit2 = 0;
+    userMandatoryHitsCalculated = 0;
+    userFinalHandValue = 0;
+
+    dealerMandatoryHit1 = 0;
+    dealerMandatoryHit2 = 0;
+    dealerMandatoryHitsCalculated = 0;
+    dealerFinalHandValue = 0;
+    }
+
+
     public static void main(String[] args) {
         new SimpleBlackjackEnhanced().run();
     }
@@ -9,18 +32,17 @@ public class SimpleBlackjackEnhanced {
     //----------RUN METHOD----------\\
     private void run() {
         Scanner scan = new Scanner(System.in); //Creates a new Scanner var
+        initVariables();
 
         //Creates user's starting cards
-        int userMandatoryHit1 = pictureCard(randomCard()); //Creates first int var that saves value of the invoked method 'pictureCard' (user's first card)
-        int userMandatoryHit2 = pictureCard(randomCard()); //Creates second int var that saves value of the invoked method 'pictureCard' (user's second card)
-        int userMandatoryHitsCalculated = userMandatoryHit1 + userMandatoryHit2; //Creates int var that combines the two var above
-        int userFinalHandValue; //Creates int var with the user's final hand value
+        userMandatoryHit1 = pictureCard(randomCard()); //Creates first int var that saves value of the invoked method 'pictureCard' (user's first card)
+        userMandatoryHit2 = pictureCard(randomCard()); //Creates second int var that saves value of the invoked method 'pictureCard' (user's second card)
+        userMandatoryHitsCalculated = userMandatoryHit1 + userMandatoryHit2; //Creates int var that combines the two var above
 
         //Creates Dealer's starting cards
-        int dealerMandatoryHit1 = pictureCard(randomCard()); //Creates first int that saves value of the invoked method 'pictureCard' (Dealer's first card)
-        int dealerMandatoryHit2 = pictureCard(randomCard());//Creates second int var that saves value of the invoked method 'pictureCard' (Dealer's second card)
-        int dealerMandatoryHitsCalculated = dealerMandatoryHit1 + dealerMandatoryHit2; //Creates int that combines the two var above
-        int dealerFinalHandValue; //Creates int var with the Dealer's final hand value
+        dealerMandatoryHit1 = pictureCard(randomCard()); //Creates first int that saves value of the invoked method 'pictureCard' (Dealer's first card)
+        dealerMandatoryHit2 = pictureCard(randomCard());//Creates second int var that saves value of the invoked method 'pictureCard' (Dealer's second card)
+        dealerMandatoryHitsCalculated = dealerMandatoryHit1 + dealerMandatoryHit2; //Creates int that combines the two var above
 
         //If 'userMandatoryHitsCalculated' equals 11, then invoke 'doesUserHaveBlackjack' that checks if the user's cards are 1 and 10. Updates the value of user's final hand to 21 if true.
         if (userMandatoryHitsCalculated == 11) {
@@ -81,13 +103,10 @@ public class SimpleBlackjackEnhanced {
     //----------PICTURE CARD TO 10 CONVERTER----------\\
     //Converts picture card to 10, and returns the value of the random number if it's below 10
     private int pictureCard(int picture) { //Turns value of integer from 11-13 to 10
-        int pictureToTen;
         if (picture > 10) {
-            pictureToTen = 10; //Updates value of random number to 10, if its 11-13.
-        } else {
-            return picture; //If the input value is less than 10 or less, return the original card value without any change
+            picture = 10; //Updates value of random number to 10, if its 11-13.
         }
-        return pictureToTen;
+        return picture; //Else just return the original value of 'picture'
     }
 
 

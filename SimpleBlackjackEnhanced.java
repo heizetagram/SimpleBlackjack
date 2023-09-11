@@ -113,7 +113,7 @@ public class SimpleBlackjackEnhanced {
     private void introductoryText(int dealerMandatoryHit1, int userMandatoryHit1, int userMandatoryHit2, int userMandatoryHitsCalculated) {
         System.out.printf("%nDealer has the cards %s%d%s and %s#%s", blueColor(), dealerMandatoryHit1, resetColor(), blueColor(), resetColor());
         System.out.printf("%nYou have the cards %s%d%s and %s%d%s equaling %s%d%s%n", greenColor(), userMandatoryHit1, resetColor(), greenColor(), userMandatoryHit2, resetColor(), greenColor(), userMandatoryHitsCalculated, resetColor());
-        System.out.println("\nHit or stand?");
+        System.out.println("\nHit or stand? (h/s)");
     }
 
 
@@ -125,7 +125,7 @@ public class SimpleBlackjackEnhanced {
         //While user String input isn't 'stand', keep running the code
         do {
             //If user inputs 'hit', get another card and add the value to the user's current hand
-            if (answer.equals("hit")) {
+            if (answer.equals("h")) {
                 int hitResult = pictureCard(randomCard()); //Creates int var with invoked method 'pictureCard' (random card between 1-13)
                 newUserHandValue += hitResult; //Adds 'hitResult' to 'newUserHandValue'
 
@@ -140,15 +140,15 @@ public class SimpleBlackjackEnhanced {
 
                 userBustedHand(newUserHandValue); //Invokes method 'userBustedHand' to check if the user's new hand is above 21
 
-                System.out.println("Hit or stand?"); //
+                System.out.println("Hit or stand? (h/s)"); //
                 answer = scan.next().toLowerCase().strip(); //Scans user string input, to ensure the loop doesn't keep iterating
             }
             //If user inputs 'stand', run the following
-            if (answer.equals("stand")) {
+            if (answer.equals("s")) {
                 System.out.printf("You stand and your hand value is %s%d%s%n%n", greenColor(),newUserHandValue,resetColor());
                 delay(1500);
             }
-        } while (!answer.equals("stand")); //As long as the user's input isn't 'stand', keep running
+        } while (!answer.equals("s")); //As long as the user's input isn't 'stand', keep running
 
         return newUserHandValue; //Returns user's updated hand value as an int
     }
@@ -160,7 +160,7 @@ public class SimpleBlackjackEnhanced {
         int blackjack = 0;
         if (blackjackConverter(userMandatoryHit1, userMandatoryHit2) == 21) {
             System.out.printf("%n%nYou have the cards %s%d%s and %s%d%s equaling %sBLACKJACK!%s%n", greenColor(), userMandatoryHit1, resetColor(), greenColor(), userMandatoryHit2, resetColor(), greenColor(), resetColor());
-            userHitOrStand("stand", 21);
+            userHitOrStand("s", 21);
             blackjack = 21;
         }
         return blackjack;
